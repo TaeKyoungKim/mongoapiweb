@@ -1,7 +1,7 @@
-var Contact = require('./contactModel')
-
+var {Contact} = require('./contactModel')
+var {TodoContact} = require('./contactModel')
 exports.index = (req , res)=>{
-    Contact.get((err, contacts)=>{
+    Contact.find((err, contacts)=>{
             if(err){
                 res.json({
                     status:"error",
@@ -17,9 +17,9 @@ exports.index = (req , res)=>{
     });
 }
 
-exports.new =(req, res)=>{
+exports.newUser =(req, res)=>{
     var contact = new Contact()
-    contact.name = req.body.name ? req.body.name : contact.name
+    contact.name = req.body.name
     contact.email = req.body.email
     contact.gender = req.body.gender
     contact.phone = req.body.phone
@@ -39,7 +39,47 @@ exports.new =(req, res)=>{
         }
     })
 }
+exports.viewTodo = (req, res )=>{
+    TodoContact.find((err, contacts) => {
+        if (err) {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.json({
+                status: "error",
+                message: err
+            })
+        } else {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.json({
+                status: "200",
+                message: "Sucess",
+                data: contacts
+            })
+        }
+    })
+}
 
+exports.newTodo =(req, res)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    var contact = new TodoContact()
+    contact.id = req.body.id 
+    contact.title = req.body.title
+    contact.status = 'todo'
+
+    //save 메서드 사용해서 저장 및 에러 체크
+    contact.save((err)=>{
+        if(err){
+            res.json({
+                status:"error",
+                message:err
+            })
+        }else{
+            res.json({
+                message:"New Contact created",
+                data:contact
+            })
+        }
+    })
+}
 exports.view =(req , res)=>{
     Contact.findById(req.params.contact_id,(err, result)=>{
         if(!err){

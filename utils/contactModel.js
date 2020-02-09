@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
 
-var contactSchema = mongoose.Schema({
+var contactSchema = new mongoose.Schema({
     name:{
         type:String,
         required:true
@@ -17,8 +17,25 @@ var contactSchema = mongoose.Schema({
     }
 })
 
-var Contact = module.exports =  mongoose.model('contact',contactSchema );
+const dataSchema = new mongoose.Schema({
+    id:String,
+    title:String,
+    status:String
+    },
+    {
+        timestamps:true
+    }
+)
+
+var Contact =mongoose.model('contact',contactSchema );
+var TodoContact =  mongoose.model('fetchdata' , dataSchema)
+
+module.exports = {Contact:Contact, TodoContact: TodoContact}
 
 module.exports.get = (callback, limit)=>{
+    Contact.find(callback).limit(limit)
+}
+
+module.exports.getTodo = (callback, limit)=>{
     Contact.find(callback).limit(limit)
 }

@@ -10,9 +10,13 @@ router.get('/',(req, res)=>{
     })
 })
 
+router.route('/todo')
+    .get(contactController.viewTodo)
+    .post(contactController.newTodo)
+    
 router.route('/contacts')
     .get(contactController.index)
-    .post(contactController.new)
+    .post(contactController.newUser)
 
 router.route('/contacts/:contact_id')
     .get(contactController.view)
